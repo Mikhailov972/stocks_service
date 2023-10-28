@@ -13,7 +13,7 @@ CREATE TABLE stock_prices
     change          DECIMAL,
     previous_volume DECIMAL,
     previous_close  DECIMAL,
-    volume          INT,
+    volume          DECIMAL,
     created_at      TIMESTAMP,
     delta           DECIMAL NOT NULL DEFAULT 0,
     company_symbol  TEXT REFERENCES companies (symbol)

@@ -5,6 +5,7 @@ import com.app.stocks_service.repository.entity.CompanyDeltaEntity
 import com.app.stocks_service.repository.entity.CompanyStatusEntity
 import com.app.stocks_service.repository.entity.CompanyStockPriceEntity
 import com.app.stocks_service.repository.entity.CompanyVolumeEntity
+import java.math.BigDecimal
 import java.sql.Timestamp
 import java.time.LocalDate
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -34,7 +35,7 @@ class StocksRepositoryTest @Autowired constructor(
         // --- When ---
         stocksRepository.saveCompaniesStatus(listOf(firstCompany, secondCompany, thirdCompany))
 
-        // --- Than ---
+        // --- Then ---
         assertEquals(2, stocksRepository.getAllActiveCompaniesStatus().size)
     }
 
@@ -61,7 +62,7 @@ class StocksRepositoryTest @Autowired constructor(
         stocksRepository.saveCompaniesStatus(listOf(changeFirstCompany))
         val firstCompanyEntityAfterChange = stocksRepository.getAllActiveCompaniesStatus().first()
 
-        // --- Than ---
+        // --- Then ---
         assertEquals(1, stocksRepository.getAllActiveCompaniesStatus().size)
         assertEquals(firstCompanyEntity.id, firstCompanyEntityAfterChange.id)
         assertEquals(true, firstCompanyEntityAfterChange.isEnabled)
@@ -91,29 +92,32 @@ class StocksRepositoryTest @Autowired constructor(
         val firstCompany = random.nextObject(CompanyStatusEntity::class.java).copy(isEnabled = true, name = "1")
 
         val firstStockPrice = random.nextObject(CompanyStockPriceEntity::class.java)
-            .copy(companySymbol = firstCompany.symbol, delta = 10.0, createdAt = yesterday)
+            .copy(companySymbol = firstCompany.symbol, delta = BigDecimal.valueOf(10.0), createdAt = yesterday)
 
         val secondStockPrice = random.nextObject(CompanyStockPriceEntity::class.java)
-            .copy(companySymbol = firstCompany.symbol, delta = 5.0, createdAt = today)
+            .copy(companySymbol = firstCompany.symbol, delta = BigDecimal.valueOf(5.0), createdAt = today)
 
         // Вторая компания и её акции
         val secondCompany = random.nextObject(CompanyStatusEntity::class.java).copy(isEnabled = true, name = "2")
 
         val thirdStockPrice = random.nextObject(CompanyStockPriceEntity::class.java)
-            .copy(companySymbol = secondCompany.symbol, delta = 10.0, createdAt = yesterday)
+            .copy(companySymbol = secondCompany.symbol, delta = BigDecimal.valueOf(10.0), createdAt = yesterday)
 
         // Третья компания и её акции
         val thirdCompany = random.nextObject(CompanyStatusEntity::class.java).copy(isEnabled = true, name = "3")
 
         val fourthStockPrice = random.nextObject(CompanyStockPriceEntity::class.java)
-            .copy(companySymbol = thirdCompany.symbol, delta = -50.0, createdAt = today)
+            .copy(companySymbol = thirdCompany.symbol, delta = BigDecimal.valueOf(-50.0), createdAt = today)
 
         stocksRepository.saveCompaniesStatus(listOf(firstCompany, secondCompany, thirdCompany))
         stocksRepository.saveCompaniesStockPrice(
             listOf(firstStockPrice, secondStockPrice, thirdStockPrice, fourthStockPrice)
         )
 
-        val expected = listOf(CompanyDeltaEntity(name = "2", delta = 10.0), CompanyDeltaEntity(name = "1", delta = 5.0))
+        val expected = listOf(
+            CompanyDeltaEntity(name = "2", delta = BigDecimal.valueOf(10.0)),
+            CompanyDeltaEntity(name = "1", delta = BigDecimal.valueOf(5.0))
+        )
 
         // --- When ---
         val actual = stocksRepository.findCompaniesWithLargestDelta(2)
@@ -150,34 +154,34 @@ class StocksRepositoryTest @Autowired constructor(
         val firstCompany = random.nextObject(CompanyStatusEntity::class.java).copy(isEnabled = true, name = "1")
 
         val firstStockPrice = random.nextObject(CompanyStockPriceEntity::class.java)
-            .copy(companySymbol = firstCompany.symbol, volume = 100.0, createdAt = yesterday)
+            .copy(companySymbol = firstCompany.symbol, volume = BigDecimal.valueOf(100.0), createdAt = yesterday)
 
         val secondStockPrice = random.nextObject(CompanyStockPriceEntity::class.java)
-            .copy(companySymbol = firstCompany.symbol, volume = 50.0, createdAt = today)
+            .copy(companySymbol = firstCompany.symbol, volume = BigDecimal.valueOf(50.0), createdAt = today)
 
         // Вторая компания и её акции
         val secondCompany = random.nextObject(CompanyStatusEntity::class.java).copy(isEnabled = true, name = "2")
 
         val thirdStockPrice = random.nextObject(CompanyStockPriceEntity::class.java)
-            .copy(companySymbol = secondCompany.symbol, volume = 49.0, createdAt = yesterday)
+            .copy(companySymbol = secondCompany.symbol, volume = BigDecimal.valueOf(49.0), createdAt = yesterday)
 
         // Третья компания и её акции
         val thirdCompany = random.nextObject(CompanyStatusEntity::class.java).copy(isEnabled = true, name = "3")
 
         val fourthStockPrice = random.nextObject(CompanyStockPriceEntity::class.java)
-            .copy(companySymbol = thirdCompany.symbol, volume = 60.0, createdAt = today)
+            .copy(companySymbol = thirdCompany.symbol, volume = BigDecimal.valueOf(60.0), createdAt = today)
 
         // Четвёртая компания и её акции
         val fourthCompany = random.nextObject(CompanyStatusEntity::class.java).copy(isEnabled = true, name = "4")
 
         val fifthStockPrice = random.nextObject(CompanyStockPriceEntity::class.java)
-            .copy(companySymbol = fourthCompany.symbol, volume = null, previousVolume = 50.0, createdAt = yesterday)
+            .copy(companySymbol = fourthCompany.symbol, volume = null, previousVolume = BigDecimal.valueOf(50.0), createdAt = yesterday)
 
         // Пятая компания и её акции
         val fifthCompany = random.nextObject(CompanyStatusEntity::class.java).copy(isEnabled = true, name = "5")
 
         val sixthStockPrice = random.nextObject(CompanyStockPriceEntity::class.java)
-            .copy(companySymbol = fifthCompany.symbol, volume = null, previousVolume = 40.0, createdAt = today)
+            .copy(companySymbol = fifthCompany.symbol, volume = null, previousVolume = BigDecimal.valueOf(40.0), createdAt = today)
 
         stocksRepository.saveCompaniesStatus(
             listOf(
@@ -200,10 +204,10 @@ class StocksRepositoryTest @Autowired constructor(
         )
 
         val expected = listOf(
-            CompanyVolumeEntity(name = "3", volume = 60.0),
-            CompanyVolumeEntity(name = "1", volume = 50.0),
-            CompanyVolumeEntity(name = "4", volume = 50.0),
-            CompanyVolumeEntity(name = "2", volume = 49.0)
+            CompanyVolumeEntity(name = "3", volume = BigDecimal.valueOf(60.0)),
+            CompanyVolumeEntity(name = "1", volume = BigDecimal.valueOf(50.0)),
+            CompanyVolumeEntity(name = "4", volume = BigDecimal.valueOf(50.0)),
+            CompanyVolumeEntity(name = "2", volume = BigDecimal.valueOf(49.0))
         )
 
         // --- When ---
@@ -214,7 +218,31 @@ class StocksRepositoryTest @Autowired constructor(
     }
 
     /**
-     * Тест проверяет, что отдаются актуальная информация об акциях
+     * Тест проверяет, что запрос не достаёт запись если volume = null и previousVolume = null
+     * Given: Компания и её акция с volume = null и previousVolume = null
+     * When: Ищем акции компании
+     * Then: Возвращается пустой результат
+     */
+    @Test
+    fun findCompaniesWithLargestVolumeTestWhenBothVolumeIsNull() {
+        // --- Given ---
+        val company = random.nextObject(CompanyStatusEntity::class.java).copy(isEnabled = true, name = "1")
+
+        val firstStockPrice = random.nextObject(CompanyStockPriceEntity::class.java)
+            .copy(companySymbol = company.symbol, volume = null, previousVolume = null)
+
+        stocksRepository.saveCompaniesStatus(listOf(company))
+        stocksRepository.saveCompaniesStockPrice(listOf(firstStockPrice))
+
+        // --- When ---
+        val actual = stocksRepository.findCompaniesWithLargestVolumeTest()
+
+        // --- Then ---
+        assertEquals(0, actual.size)
+    }
+
+    /**
+     * Тест проверяет, что отдаётся актуальная информация об акциях
      *
      * Given: Одна компания, вчерашняя и сегодняшняя акция
      * When: Ищем актуальную информацию об акциях

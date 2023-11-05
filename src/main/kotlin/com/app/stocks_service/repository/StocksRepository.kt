@@ -97,7 +97,7 @@ class StocksRepository(private val jdbcTemplate: NamedParameterJdbcTemplate) {
                   GROUP BY isp.company_symbol) AS latest_created_at
                  ON latest_created_at.created_at = sp.created_at AND latest_created_at.company_symbol = sp.company_symbol
                      JOIN companies c on sp.company_symbol = c.symbol
-            WHERE c.is_enabled = true
+            WHERE c.is_enabled = true AND COALESCE(sp.volume, sp.previous_volume) IS NOT NULL
             ORDER BY volume DESC, c.name
             LIMIT :limit
         """.trimIndent()
@@ -151,13 +151,13 @@ class StocksRepository(private val jdbcTemplate: NamedParameterJdbcTemplate) {
     private fun companyStockPriceEntityMapper() = RowMapper<CompanyStockPriceEntity> { rs, _ ->
         CompanyStockPriceEntity(
             id = rs.getLong("id"),
-            latestPrice = rs.getDouble("latest_price"),
-            change = rs.getDouble("change"),
-            previousVolume = rs.getDouble("previous_volume"),
-            previousClose = rs.getDouble("previous_close"),
-            volume = rs.getDouble("volume"),
+            latestPrice = rs.getBigDecimal("latest_price"),
+            change = rs.getBigDecimal("change"),
+            previousVolume = rs.getBigDecimal("previous_volume"),
+            previousClose = rs.getBigDecimal("previous_close"),
+            volume = rs.getBigDecimal("volume"),
             createdAt = rs.getTimestamp("created_at"),
-            delta = rs.getDouble("delta"),
+            delta = rs.getBigDecimal("delta"),
             companySymbol = rs.getString("company_symbol")
         )
     }
@@ -165,14 +165,14 @@ class StocksRepository(private val jdbcTemplate: NamedParameterJdbcTemplate) {
     private fun companyVolumeEntityMapper() = RowMapper<CompanyVolumeEntity> { rs, _ ->
         CompanyVolumeEntity(
             name = rs.getString("name"),
-            volume = rs.getDouble("volume")
+            volume = rs.getBigDecimal("volume")
         )
     }
 
     private fun companyDeltaEntityMapper() = RowMapper<CompanyDeltaEntity> { rs, _ ->
         CompanyDeltaEntity(
             name = rs.getString("name"),
-            delta = rs.getDouble("delta")
+            delta = rs.getBigDecimal("delta")
         )
     }
 

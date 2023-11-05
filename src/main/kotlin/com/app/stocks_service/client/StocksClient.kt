@@ -33,12 +33,12 @@ class StocksClient {
         }
         install(Logging) {
             logger = Logger.DEFAULT
-            level = LogLevel.ALL
+            level = LogLevel.INFO
         }
         defaultRequest {
             url {
                 url("https://api.iex.cloud")
-                parameters.append("token", "pk_a6237f66ce5d456fa3e348e875384f2f")
+                parameters.append("token", "pk_53274da8130848eeb49f4eac9f7d1fa0")
             }
         }
 

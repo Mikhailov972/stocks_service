@@ -1,15 +1,16 @@
 package com.app.stocks_service.repository.entity
 
+import java.math.BigDecimal
 import java.sql.Timestamp
 
 data class CompanyStockPriceEntity(
     val id: Long? = null,
-    val latestPrice: Double?,
-    val change: Double?,
-    val previousVolume: Double?,
-    val previousClose: Double?,
-    val volume: Double?,
+    val latestPrice: BigDecimal?,
+    val change: BigDecimal?,
+    val previousVolume: BigDecimal?,
+    val previousClose: BigDecimal?,
+    val volume: BigDecimal?,
     val createdAt: Timestamp,
-    val delta: Double,
+    val delta: BigDecimal,
     val companySymbol: String
 )

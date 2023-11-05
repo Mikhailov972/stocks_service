@@ -29,6 +29,7 @@ dependencies {
 	testImplementation("org.jeasy:easy-random-core:5.0.0")
 	testImplementation("org.testcontainers:postgresql")
 	testImplementation("org.testcontainers:junit-jupiter")
+	testImplementation("org.mockito:mockito-core")
 
 	implementation("io.ktor:ktor-client-core:2.3.4")
 	implementation("io.ktor:ktor-client-java:2.3.4")

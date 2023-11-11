@@ -19,6 +19,9 @@ repositories {
 	mavenCentral()
 }
 
+val ktorVersion: String = "2.3.4"
+val easyRandomVersion: String = "5.0.0"
+
 dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
@@ -26,16 +29,16 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-jdbc")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
-	testImplementation("org.jeasy:easy-random-core:5.0.0")
+	testImplementation("org.jeasy:easy-random-core:$easyRandomVersion")
 	testImplementation("org.testcontainers:postgresql")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.mockito:mockito-core")
 
-	implementation("io.ktor:ktor-client-core:2.3.4")
-	implementation("io.ktor:ktor-client-java:2.3.4")
-	implementation("io.ktor:ktor-client-content-negotiation:2.3.4")
-	implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.4")
-	implementation("io.ktor:ktor-client-logging:2.3.4")
+	implementation("io.ktor:ktor-client-core:$ktorVersion")
+	implementation("io.ktor:ktor-client-java:$ktorVersion")
+	implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+	implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+	implementation("io.ktor:ktor-client-logging:$ktorVersion")
 
 	implementation("org.postgresql:postgresql")
 	implementation("org.flywaydb:flyway-core")

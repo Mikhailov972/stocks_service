@@ -19,7 +19,7 @@ import kotlinx.serialization.json.Json
 import org.springframework.stereotype.Component
 
 @Component
-class StocksClient {
+class StocksClient(val apiConfiguration: ApiConfiguration) {
     val client = HttpClient(Java) {
         install(HttpRequestRetry) {
             retryOnServerErrors()
@@ -38,7 +38,7 @@ class StocksClient {
         defaultRequest {
             url {
                 url("https://api.iex.cloud")
-                parameters.append("token", "pk_53274da8130848eeb49f4eac9f7d1fa0")
+                parameters.append("token", apiConfiguration.key)
             }
         }
 
